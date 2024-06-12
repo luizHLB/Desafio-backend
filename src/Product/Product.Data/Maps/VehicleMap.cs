@@ -5,7 +5,7 @@ using Product.Domain.Entities;
 
 namespace Product.Data.Maps
 {
-    public class VehicleMap : BaseMap<Vehicle>, IEntityTypeConfiguration<Vehicle>
+    public partial class VehicleMap : BaseMap<Vehicle>
     {
         public override void Configure(EntityTypeBuilder<Vehicle> builder)
         {
@@ -22,6 +22,19 @@ namespace Product.Data.Maps
                 .HasColumnType("int")
                 .HasColumnName("Year")
                 .IsRequired();
+
+            builder.Property(p => p.LicensePlate)
+                .HasColumnType("varchar(8)")
+                .HasColumnName("LicensePlate")
+                .IsRequired();
+
+            builder.Property(p => p.Model)
+                .HasColumnType("varchar(50)")
+                .HasColumnName("Model")
+                .IsRequired();
+
+            builder.HasIndex(i => i.LicensePlate)
+                .IsUnique();
         }
     }
 }

@@ -8,7 +8,11 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Product.API/Product.API.csproj", "Product.API/"]
+COPY ["/Product.API/Product.API.csproj", "Product.API/"]
+COPY ["/Product.Domain/Product.Domain.csproj", "Product.API/"]
+COPY ["/Product.Service/Product.Service.csproj", "Product.API/"]
+COPY ["/Product.Data/Product.Data.csproj", "Product.Data/"]
+COPY ["/Product.API/appsettings.json", "Product.API/"]
 RUN dotnet restore "./Product.API/Product.API.csproj"
 COPY . .
 WORKDIR "/src/Product.API"

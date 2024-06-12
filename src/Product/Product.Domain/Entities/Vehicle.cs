@@ -8,5 +8,7 @@ namespace Product.Domain.Entities
         public int Year { get; set; }
         public string Model { get; set; }
         public string LicensePlate { get; set; }
+
+        public virtual ICollection<Rental> Rentals { get; set; }
     }
 }

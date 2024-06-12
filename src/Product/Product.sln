@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Product.API", "Product.API\Product.API.csproj", "{CBFB4694-E5F6-430D-9049-C7F746F4C902}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product.API", "Product.API\Product.API.csproj", "{CBFB4694-E5F6-430D-9049-C7F746F4C902}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Product.Domain", "Product.Domain\Product.Domain.csproj", "{A6584201-5BF8-4EE3-87DB-73C00C7D169E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product.Domain", "Product.Domain\Product.Domain.csproj", "{A6584201-5BF8-4EE3-87DB-73C00C7D169E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Product.Data", "Product.Data\Product.Data.csproj", "{96D173DD-BE01-4C9C-850E-4B5D72004D8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product.Data", "Product.Data\Product.Data.csproj", "{96D173DD-BE01-4C9C-850E-4B5D72004D8E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - API", "1 - API", "{6581CEDC-2A86-4CC0-A7FF-503B6A6DB180}"
 EndProject
@@ -19,7 +19,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Test", "5 - Test", "{81
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Service", "3 - Service", "{9AE434E9-2B25-4FAC-A213-0AD12479015A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Product.Service", "Product.Service\Product.Service.csproj", "{4ACE09B8-A512-4F46-9521-2833D50CE09B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product.Service", "Product.Service\Product.Service.csproj", "{4ACE09B8-A512-4F46-9521-2833D50CE09B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C74DEDE2-6AC5-4F4F-ACF7-650BD9114C67}"
+	ProjectSection(SolutionItems) = preProject
+		..\docker-compose.yaml = ..\docker-compose.yaml
+		Dockerfile = Dockerfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
