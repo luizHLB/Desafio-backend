@@ -5,7 +5,7 @@ using Product.Domain.Entities;
 
 namespace Product.Data.Maps
 {
-    public partial class VehicleMap : BaseMap<Vehicle>
+    public class VehicleMap : BaseMap<Vehicle>
     {
         public override void Configure(EntityTypeBuilder<Vehicle> builder)
         {

@@ -21,16 +21,25 @@ services:
       - POSTGRES_USER=productAdmin
       - POSTGRES_DB=Product-DEV
     ports:
-      - 1433:1433
+      - 5432:5432
     networks:
       - back-end
+ 
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    container_name: azurite
+    ports:
+      - 10000:10000
+    networks:
+      - back-end  
       
   api:
     depends_on:
       - rabbitProduct
       - dbProduct
+      - azurite
     image: api
-    container_name: api
+    container_name: Product.API
     build:
      context: Product
     environment:

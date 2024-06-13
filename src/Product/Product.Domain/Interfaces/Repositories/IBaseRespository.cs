@@ -3,17 +3,14 @@ using System.Linq.Expressions;
 
 namespace Product.Domain.Interfaces.Repositories
 {
-    public interface IBaseRespository<T> where T : class
+    public interface IBaseRespository<T, TT> where T : class where TT : class
     {
-        Task<PagedListDTO<T>> PagedListAsync(Expression<Func<T, bool>> expression,
-            int pageNumber,
-            int pageSize,
-            params Expression<Func<T, object>>[] includes);
-
+        Task<PagedListDTO<TT>> PagedListAsync(Expression<Func<T, bool>> expression, int pageNumber, int pageSize);
         IQueryable<T> Query(Expression<Func<T, bool>> requiredExpression);
         IQueryable<T> Filter(IQueryable<T> entity);
-        void Add(T entity);
-        void Remove(T entity);
+        Task Add(T entity);
+        Task Remove(long id);
         void Update(T entity);
+        Task<T> GetById(long id);
     }
 }

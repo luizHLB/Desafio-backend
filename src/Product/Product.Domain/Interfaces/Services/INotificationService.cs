@@ -1,7 +1,12 @@
-﻿namespace Product.Domain.Interfaces.Services
+﻿using Product.Domain.DTO;
+using Product.Domain.DTO.Notification;
+using Product.Domain.Entities;
+
+namespace Product.Domain.Interfaces.Services
 {
-    public interface INotificationService
+    public interface INotificationService : IBaseService<Notification, NotificationDTO>
     {
-        Task Register(object dto);
+        Task<PagedListDTO<NotificationDTO>> PagedListAsync(int page, int pageSize);
+        Task Register(Vehicle dto);
     }
 }

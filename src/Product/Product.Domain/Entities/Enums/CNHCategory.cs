@@ -1,5 +1,6 @@
 ﻿namespace Product.Domain.Entities.Enums
 {
+    [Flags]
     public enum CNHCategory
     {
         A = 1,

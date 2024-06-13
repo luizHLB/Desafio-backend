@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Product.Domain.Entities;
 using Product.Domain.Interfaces.Services;
 using Product.Domain.Interfaces.Utils;
 using Product.Domain.Settings;
@@ -17,7 +18,7 @@ namespace Product.API.Workers
 
         protected override async Task Execute(string message)
         {
-            var dto = JsonConvert.DeserializeObject<object>(message);
+            var dto = JsonConvert.DeserializeObject<Vehicle>(message);
             using(var scope = _serviceProvider.CreateScope())
             {
                 var service = scope.ServiceProvider.GetService<INotificationService>();

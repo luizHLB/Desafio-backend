@@ -52,7 +52,7 @@ builder.Services.AddSwaggerGen(options =>
                 });
 });
 
-//builder.Services.AddHostedService<NotificationService>();
+builder.Services.AddHostedService<NotificationService>();
 
 var app = builder.Build();
 

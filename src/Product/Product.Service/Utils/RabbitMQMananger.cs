@@ -3,11 +3,7 @@ using Newtonsoft.Json;
 using Product.Domain.Interfaces.Utils;
 using Product.Domain.Settings;
 using RabbitMQ.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Product.Service.Utils
 {
@@ -23,14 +19,18 @@ namespace Product.Service.Utils
             ConnectionFactory = CreateConnectionFactory();
         }
 
-        public void BasicPublish(ExecutionQueue queue, object message, IModel? channel, string rountingKey = "")
+        public void BasicPublish(ExecutionQueue queue, object message, string rountingKey = "")
         {
-            if (message is null || channel is null)
+            if (message is null)
                 return;
 
-            var settings = channel.CreateBasicProperties();
-            settings.ContentType = "application/json";
-            channel.BasicPublish(exchange: GetQueueName(queue), rountingKey, settings, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)));
+            using (var connection = ConnectionFactory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                var settings = channel.CreateBasicProperties();
+                settings.ContentType = "application/json";
+                channel.BasicPublish(exchange: GetQueueName(queue), rountingKey, settings, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)));
+            }
         }
 
         public string GetQueueName(ExecutionQueue process)

@@ -1,8 +1,9 @@
-﻿using Product.Domain.Entities;
+﻿using Product.Domain.DTO.Vehicle;
+using Product.Domain.Entities;
 
 namespace Product.Domain.Interfaces.Repositories
 {
-    public interface IVehicleRepository : IBaseRespository<Vehicle>
+    public interface IVehicleRepository : IBaseRespository<Vehicle, VehicleDTO>
     {
     }
 }

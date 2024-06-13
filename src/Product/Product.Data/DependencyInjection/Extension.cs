@@ -13,6 +13,7 @@ namespace Product.Data.DependencyInjection
         {
             service.AddScoped<IDriverRepository, DriverRepository>();
             service.AddScoped<IVehicleRepository, VehicleRepository>();
+            service.AddScoped<INotificationRepository, NotificationRepository>();
 
             service.AddDbContext<ProductContext>(options => options.UseNpgsql(config.GetConnectionString("ProductDB")));
 

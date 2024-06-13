@@ -8,7 +8,7 @@ namespace Product.Domain.Interfaces.Utils
         public IConnectionFactory ConnectionFactory { get; set; }
         public RabbitMQSettings RabbitSettings { get; set; }
 
-        void BasicPublish(ExecutionQueue queue, object message, IModel? channel, string rountingKey = "");
+        void BasicPublish(ExecutionQueue queue, object message, string rountingKey = "");
         string GetQueueName(ExecutionQueue process);
         void CreateQueueExchange(IModel channel, string queue, string rountingKey);
     }

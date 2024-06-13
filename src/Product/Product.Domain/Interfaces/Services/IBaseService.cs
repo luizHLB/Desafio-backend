@@ -3,14 +3,14 @@ using System.Linq.Expressions;
 
 namespace Product.Domain.Interfaces.Services
 {
-    public interface IBaseService<T> where T : class
+    public interface IBaseService<T, TT> where T : class where TT : class
     {
-        Task<PagedListDTO<T>> PagedListAsync(Expression<Func<T, bool>> expression,
-            int pageNumber,
-            int pageSize);
+        Task<PagedListDTO<TT>> PagedListAsync(Expression<Func<T, bool>> expression, int pageNumber, int pageSize);
 
-        void Add(T entity);
-        void Remove(T entity);
+        Task Add(T entity);
+        Task Remove(long id);
         void Update(T entity);
+        void Validate(T entity);
+        Task<T> GetById(long id);
     }
 }

@@ -12,6 +12,7 @@ namespace Product.Data.Contexts
         public DbSet<Driver> Driver { get; set; }
         public DbSet<Plan> Plans { get; set; }
         public DbSet<Rental> Rentals { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -20,6 +21,7 @@ namespace Product.Data.Contexts
             modelBuilder.Entity<Driver>(new DriverMap().Configure);
             modelBuilder.Entity<Plan>(new PlanMap().Configure);
             modelBuilder.Entity<Rental>(new RentalMap().Configure);
+            modelBuilder.Entity<Notification>(new NotificationMap().Configure);
         }
     }
 }
