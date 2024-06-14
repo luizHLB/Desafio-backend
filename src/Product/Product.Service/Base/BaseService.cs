@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using Product.Domain.DTO;
 using Product.Domain.Interfaces.Repositories;
 using Product.Domain.Interfaces.Services;
 using Product.Domain.Secutiry;
-using System.Linq.Expressions;
 
 namespace Product.Service.Base
 {
@@ -11,8 +9,9 @@ namespace Product.Service.Base
     {
         protected readonly ILogger<BaseService<T, TT>> _logger;
         protected readonly IBaseRepository<T, TT> _repository;
-        private JwtContextVO jwtContext;
+        public IBaseRepositoryUserHandler Repository { get; set; }
 
+        private JwtContextVO jwtContext;
         public JwtContextVO JwtContext { get { return jwtContext; }}
 
 
@@ -20,17 +19,13 @@ namespace Product.Service.Base
         {
             _logger = logger;
             _repository = repository;
+            Repository = repository;
         }
 
         public virtual async Task Add(T entity)
         {
             await Validate(entity);
             await _repository.Add(entity);
-        }
-
-        public Task<PagedListDTO<TT>> PagedListAsync(Expression<Func<T, bool>> expression, int pageNumber, int pageSize)
-        {
-            return _repository.PagedListAsync(expression, pageNumber, pageSize);
         }
 
         public virtual async Task Remove(long id)

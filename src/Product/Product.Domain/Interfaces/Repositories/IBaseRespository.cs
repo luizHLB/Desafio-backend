@@ -1,10 +1,11 @@
 ﻿using Product.Domain.DTO;
 using Product.Domain.DTO.Plan;
+using Product.Domain.Interfaces.Services;
 using System.Linq.Expressions;
 
 namespace Product.Domain.Interfaces.Repositories
 {
-    public interface IBaseRepository<T, TT> where T : class where TT : class
+    public interface IBaseRepository<T, TT> : IBaseRepositoryUserHandler where T : class where TT : class
     {
         Task<PagedListDTO<TT>> PagedListAsync(Expression<Func<T, bool>> expression, int pageNumber, int pageSize);
         IQueryable<T> Query(Expression<Func<T, bool>> requiredExpression);

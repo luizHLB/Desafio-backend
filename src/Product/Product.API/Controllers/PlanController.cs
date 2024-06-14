@@ -1,17 +1,20 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Query.Internal;
+using Product.API.Controllers.Base;
+using Product.API.Filter;
 using Product.Domain.Interfaces.Services;
 
 namespace Product.API.Controllers
 {
-    [Produces("application/json")]
+    [TokenHandler]
     [Route("api/v1/Plan")]
-    [AllowAnonymous]
-    public class PlanController : Controller
+    [Produces("application/json")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public class PlanController : BaseController
     {
         private readonly IPlanService _service;
-        public PlanController(IPlanService service)
+        public PlanController(IPlanService service) : base(service)
         {
             _service = service;
         }

@@ -1,17 +1,21 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Product.API.Controllers.Base;
+using Product.API.Filter;
 using Product.Domain.Interfaces.Services;
 
 namespace Product.API.Controllers
 {
+    [TokenHandler]
     [Produces("application/json")]
     [Route("api/v1/Notification")]
-    [AllowAnonymous]
-    public class NotificationController : Controller
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public class NotificationController : BaseController
     {
         private readonly INotificationService _service;
 
-        public NotificationController(INotificationService service)
+        public NotificationController(INotificationService service) : base(service)
         {
             _service = service;
         }

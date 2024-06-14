@@ -6,9 +6,9 @@ namespace Product.API.Controllers.Base
     [ApiController]
     public class BaseController : Controller
     {
-        public IBaseUserHandler Service { get; set; }
+        public IBaseServiceUserHandler Service { get; set; }
 
-        public BaseController(IBaseUserHandler service)
+        public BaseController(IBaseServiceUserHandler service)
         {
             Service = service;
         }

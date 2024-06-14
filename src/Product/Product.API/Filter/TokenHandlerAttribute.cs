@@ -27,7 +27,8 @@ namespace Product.API.Filter
 
             var controller = (BaseController)context.Controller;
             var service = controller.GetType().GetProperty("Service").GetValue(controller);
-            ((IBaseUserHandler)service).SetJwtContext(jwtContext);
+            ((IBaseServiceUserHandler)service).SetJwtContext(jwtContext);
+            ((IBaseServiceUserHandler)service).Repository.SetJwtContext(jwtContext);
         }
     }
 }

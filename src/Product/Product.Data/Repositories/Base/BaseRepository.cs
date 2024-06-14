@@ -7,6 +7,8 @@ using Product.Domain.DTO;
 using Product.Domain.Entities.Base;
 using Product.Domain.Exceptions;
 using Product.Domain.Interfaces.Repositories;
+using Product.Domain.Interfaces.Services;
+using Product.Domain.Secutiry;
 using System.Data;
 using System.Linq.Expressions;
 
@@ -15,7 +17,8 @@ namespace Product.Data.Repositories.Base
     public abstract class BaseRepository<T, TT> : IBaseRepository<T, TT> where T : BaseEntity where TT : class
     {
         protected readonly ProductContext _context;
-
+        private JwtContextVO jwtContext;
+        public JwtContextVO JwtContext { get { return jwtContext; } }
         public BaseRepository(ProductContext context)
         {
             _context = context;
@@ -25,6 +28,9 @@ namespace Product.Data.Repositories.Base
         {
             try
             {
+                entity.CreatedBy = JwtContext.Id;
+                entity.CreatedAt = DateTime.Now;
+
                 var temp = _context.Set<T>().Add(entity);
                 await _context.SaveChangesAsync();
             }
@@ -82,6 +88,9 @@ namespace Product.Data.Repositories.Base
         {
             try
             {
+                entity.UpdatedBy = JwtContext.Id;
+                entity.UpdatedAt = DateTime.Now;
+
                 _context.Entry(entity).State = EntityState.Detached;
                 _context.Set<T>().Update(entity);
                 _context.SaveChanges();
@@ -98,5 +107,10 @@ namespace Product.Data.Repositories.Base
         }
 
         public virtual async Task<T> GetById(long id) => await _context.Set<T>().FirstOrDefaultAsync(f => f.Id.Equals(id));
+
+        public void SetJwtContext(JwtContextVO vo)
+        {
+            jwtContext = vo;
+        }
     }
 }

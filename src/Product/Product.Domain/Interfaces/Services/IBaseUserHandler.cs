@@ -2,8 +2,14 @@
 
 namespace Product.Domain.Interfaces.Services
 {
-    public interface IBaseUserHandler
+    public interface IBaseServiceUserHandler : IBaseRepositoryUserHandler
+    {
+        IBaseRepositoryUserHandler Repository { get; set; }
+    }
+
+    public interface IBaseRepositoryUserHandler
     {
         void SetJwtContext(JwtContextVO vo);
+
     }
 }

@@ -1,19 +1,23 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Product.API.Controllers.Base;
+using Product.API.Filter;
 using Product.Domain.DTO.Vehicle;
 using Product.Domain.Exceptions;
 using Product.Domain.Interfaces.Services;
 
 namespace Product.API.Controllers
 {
-    [Produces("application/json")]
+    [TokenHandler]
     [Route("api/v1/Vehicle")]
-    [AllowAnonymous]
-    public class VehicleController : Controller
+    [Produces("application/json")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public class VehicleController : BaseController
     {
         private readonly IVehicleService _service;
 
-        public VehicleController(IVehicleService service)
+        public VehicleController(IVehicleService service) : base (service)
         {
             _service = service;
         }
