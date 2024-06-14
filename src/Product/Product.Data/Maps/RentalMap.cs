@@ -43,6 +43,21 @@ namespace Product.Data.Maps
                .HasColumnName("EstimatedReturnDate")
                .IsRequired();
 
+            builder.Property(p => p.TotalRental)
+                .HasColumnType("numeric(10,2)")
+                .HasColumnName("TotalRental")
+                .IsRequired(false);
+
+            builder.Property(p => p.TotalExtras)
+               .HasColumnType("numeric(10,2)")
+               .HasColumnName("TotalExtras")
+               .IsRequired(false);
+
+            builder.Property(p => p.TotalFines)
+              .HasColumnType("numeric(10,2)")
+              .HasColumnName("TotalFines")
+              .IsRequired(false);
+
             builder.HasOne(o => o.Driver)
                 .WithMany(m => m.Rentals)
                 .HasForeignKey(fk => fk.DriverId)

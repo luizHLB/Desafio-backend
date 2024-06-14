@@ -16,5 +16,10 @@ namespace Product.Domain.Entities
         public DateTime WithdrawDate { get; set; }
         public DateTime? ReturnDate { get; set; }
         public DateTime EstimatedReturnDate { get; set; }
+
+        public double? TotalRental { get; set; }
+        public double? TotalFines { get; set; }
+        public double? TotalExtras { get; set; }
+
     }
 }

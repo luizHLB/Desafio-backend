@@ -13,7 +13,7 @@ namespace Product.Data.Repositories
 
         public override List<PlanDTO> Cast(List<Plan> itens) => itens.Select(s => new PlanDTO(s)).ToList();
 
-        public async Task<IList<PlanDTO>> GetPlans() => 
+        public async Task<IList<PlanDTO>> GetPlans() =>
             await _context.Plans.AsNoTracking().Select(s => new PlanDTO { Id = s.Id, Name = s.Name }).ToListAsync();
     }
 }

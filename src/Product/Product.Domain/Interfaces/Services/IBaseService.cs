@@ -9,8 +9,7 @@ namespace Product.Domain.Interfaces.Services
 
         Task Add(T entity);
         Task Remove(long id);
-        void Update(T entity);
-        void Validate(T entity);
+        Task Update(T entity);
         Task<T> GetById(long id);
     }
 }

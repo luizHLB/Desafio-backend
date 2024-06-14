@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Product.Domain.DTO;
-using Product.Domain.Entities;
 using Product.Domain.Interfaces.Repositories;
 using Product.Domain.Interfaces.Services;
 using System.Linq.Expressions;
@@ -20,7 +19,7 @@ namespace Product.Service.Base
 
         public virtual async Task Add(T entity)
         {
-            Validate(entity);
+            await Validate(entity);
             await _repository.Add(entity);
         }
 
@@ -34,13 +33,13 @@ namespace Product.Service.Base
             await _repository.Remove(id);
         }
 
-        public void Update(T entity)
+        public async Task Update(T entity)
         {
-            Validate(entity);
+            await Validate(entity);
             _repository.Update(entity);
         }
 
-        public virtual void Validate(T entity)
+        protected virtual async Task Validate(T entity)
         {
         }
 

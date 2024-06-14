@@ -57,13 +57,13 @@ namespace Product.Service
         {
             var entity = await GetById(dto.Id);
             entity.LicensePlate = dto.LicensePlate;
-            Update(entity);
+            await Update(entity);
 
             return new VehicleDTO(entity);
 
         }
 
-        public override void Validate(Vehicle entity)
+        protected override async Task Validate(Vehicle entity)
         {
             var messages = new List<string>();
             if (string.IsNullOrEmpty(entity.Identifier))

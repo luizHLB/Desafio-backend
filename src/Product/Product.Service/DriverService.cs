@@ -85,7 +85,7 @@ namespace Product.Service
             await _azureStorage.DeleteFile(entity.CNHImage);
             entity.CNHImage = fileName;
 
-            Update(entity);
+            await Update(entity);
             return new DriverDTO(entity)
             {
                 CNHImage = $"{_baseURI}{entity.CNHImage}"
@@ -93,7 +93,7 @@ namespace Product.Service
 
         }
 
-        public override void Validate(Driver entity)
+        protected override async Task Validate(Driver entity)
         {
             var messages = new List<string>();
             if (string.IsNullOrEmpty(entity.Name))
