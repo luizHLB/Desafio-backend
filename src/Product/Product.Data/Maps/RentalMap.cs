@@ -29,17 +29,17 @@ namespace Product.Data.Maps
                .IsRequired();
 
             builder.Property(p => p.WithdrawDate)
-                .HasColumnType("timestamp with time zone")
+                .HasColumnType("date")
                 .HasColumnName("WithdrawDate")
                 .IsRequired();
 
             builder.Property(p => p.ReturnDate)
-               .HasColumnType("timestamp with time zone")
+               .HasColumnType("date")
                .HasColumnName("ReturnDate")
                .IsRequired(false);
 
             builder.Property(p => p.EstimatedReturnDate)
-               .HasColumnType("timestamp with time zone")
+               .HasColumnType("date")
                .HasColumnName("EstimatedReturnDate")
                .IsRequired();
 

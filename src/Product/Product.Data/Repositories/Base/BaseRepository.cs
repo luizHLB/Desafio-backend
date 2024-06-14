@@ -25,14 +25,14 @@ namespace Product.Data.Repositories.Base
         {
             try
             {
-                _context.Set<T>().Add(entity);
+                var temp = _context.Set<T>().Add(entity);
                 await _context.SaveChangesAsync();
-
             }
             catch (DbUpdateException e)
             {
                 if (e.InnerException is PostgresException && !string.IsNullOrEmpty(((PostgresException)e.InnerException).ConstraintName))
                     throw new EntityConstraintException(((PostgresException)e.InnerException).ConstraintName);
+                throw e;
             }
             catch (Exception)
             {
@@ -68,6 +68,12 @@ namespace Product.Data.Repositories.Base
             if (entity is null)
                 throw new RecordNotFoundException();
 
+            _context.Set<T>().Remove(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public virtual async Task Remove(T entity)
+        {
             _context.Set<T>().Remove(entity);
             await _context.SaveChangesAsync();
         }

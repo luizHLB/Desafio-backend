@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Product.API.Controllers.Base;
+using Product.API.Filter;
 using Product.Domain.DTO.Driver;
 using Product.Domain.DTO.Vehicle;
+using Product.Domain.Entities;
 using Product.Domain.Exceptions;
 using Product.Domain.Interfaces.Services;
 
@@ -9,11 +12,11 @@ namespace Product.API.Controllers
 {
     [Produces("application/json")]
     [Route("api/v1/Driver")]
-    [AllowAnonymous]
-    public class DriverController : Controller
+    [TokenHandler]
+    public class DriverController : BaseController<Driver, DriverDTO>
     {
         private readonly IDriverService _service;
-        public DriverController(IDriverService service)
+        public DriverController(IDriverService service) : base (service)
         {
             _service = service;
         }
@@ -49,7 +52,7 @@ namespace Product.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] CreateDriverDTO dto )
+        public async Task<IActionResult> Create([FromForm] CreateDriverDTO dto)
         {
             try
             {
@@ -66,11 +69,11 @@ namespace Product.API.Controllers
         }
 
         [HttpPatch("{id:long}")]
-        public async Task<IActionResult> Patch([FromRoute] long id, [FromForm] IFormFile cnhImage)
+        public async Task<IActionResult> Patch([FromRoute] long id, [FromForm] UpdateDriverDTO dto)
         {
             try
             {
-                return Ok(await _service.Update(id, cnhImage));
+                return Ok(await _service.Update(id, dto));
             }
             catch (EntityConstraintException e)
             {
@@ -104,6 +107,4 @@ namespace Product.API.Controllers
             }
         }
     }
-
-    
 }

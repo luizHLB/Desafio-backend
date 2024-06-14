@@ -57,7 +57,10 @@ namespace Product.Service
             if (response is null)
                 throw new RecordNotFoundException();
 
-            return new DriverDTO(response);
+            return new DriverDTO(response)
+            {
+                CNHImage = $"{_baseURI}{response.CNHImage}"
+            };
         }
 
         public async Task<PagedListDTO<DriverDTO>> PagedListAsync(string name = "", string cnpj = "", string cnh = "", int page = 1, int pageSize = 10)
@@ -74,14 +77,14 @@ namespace Product.Service
             return await _repository.PagedListAsync(w => w.Name.ToLower().Contains(name) && w.CNPJ.Contains(cnpj) && w.CNH.Contains(cnh), page, pageSize);
         }
 
-        public async Task<DriverDTO> Update(long id, IFormFile file)
+        public async Task<DriverDTO> Update(long id, UpdateDriverDTO  dto)
         {
             var entity = await GetById(id);
             if (entity is null)
                 throw new RecordNotFoundException();
 
-            ValidateFile(file);
-            var fileName = await _azureStorage.UploadFile(file);
+            ValidateFile(dto.CNHImage);
+            var fileName = await _azureStorage.UploadFile(dto.CNHImage);
             await _azureStorage.DeleteFile(entity.CNHImage);
             entity.CNHImage = fileName;
 
@@ -136,6 +139,16 @@ namespace Product.Service
 
             if (file.Length <= 0)
                 throw new EntityConstraintException($"CNH Image corrupted");
+        }
+
+        public override async Task Remove(long id)
+        {
+            var entity = await GetById(id);
+            if (entity is null)
+                throw new RecordNotFoundException();
+
+            await _azureStorage.DeleteFile(entity.CNHImage);
+            await Remove(entity);
         }
     }
 }

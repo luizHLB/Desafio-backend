@@ -13,7 +13,7 @@ namespace Product.Data.Contexts
         public DbSet<Plan> Plans { get; set; }
         public DbSet<Rental> Rentals { get; set; }
         public DbSet<Notification> Notifications { get; set; }
-
+        public DbSet<User> Users { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -22,6 +22,7 @@ namespace Product.Data.Contexts
             modelBuilder.Entity<Plan>(new PlanMap().Configure);
             modelBuilder.Entity<Rental>(new RentalMap().Configure);
             modelBuilder.Entity<Notification>(new NotificationMap().Configure);
+            modelBuilder.Entity<User>(new UserMap().Configure);
         }
     }
 }

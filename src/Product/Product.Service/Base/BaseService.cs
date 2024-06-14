@@ -2,6 +2,7 @@
 using Product.Domain.DTO;
 using Product.Domain.Interfaces.Repositories;
 using Product.Domain.Interfaces.Services;
+using Product.Domain.Secutiry;
 using System.Linq.Expressions;
 
 namespace Product.Service.Base
@@ -10,6 +11,10 @@ namespace Product.Service.Base
     {
         protected readonly ILogger<BaseService<T, TT>> _logger;
         protected readonly IBaseRepository<T, TT> _repository;
+        private JwtContextVO jwtContext;
+
+        public JwtContextVO JwtContext { get { return jwtContext; }}
+
 
         public BaseService(ILogger<BaseService<T, TT>> logger, IBaseRepository<T, TT> repository)
         {
@@ -28,9 +33,14 @@ namespace Product.Service.Base
             return _repository.PagedListAsync(expression, pageNumber, pageSize);
         }
 
-        public async Task Remove(long id)
+        public virtual async Task Remove(long id)
         {
             await _repository.Remove(id);
+        }
+
+        public virtual async Task Remove(T entity)
+        {
+            await _repository.Remove(entity);
         }
 
         public async Task Update(T entity)
@@ -46,6 +56,11 @@ namespace Product.Service.Base
         public virtual async Task<T> GetById(long id)
         {
             return await _repository.GetById(id);
+        }
+
+        public void SetJwtContext(JwtContextVO vo)
+        {
+            jwtContext = vo;
         }
     }
 }

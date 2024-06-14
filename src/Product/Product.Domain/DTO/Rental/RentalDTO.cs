@@ -9,6 +9,7 @@
         {
             Id = entity.Id;
             DriverId = entity.DriverId;
+            PlanId = entity.PlanId;
             VehicleId = entity.VehicleId;
             WithdrawDate = entity.WithdrawDate;
             EstimatedReturnDate = entity.EstimatedReturnDate;

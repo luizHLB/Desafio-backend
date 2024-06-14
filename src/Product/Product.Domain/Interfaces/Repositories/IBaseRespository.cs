@@ -11,6 +11,7 @@ namespace Product.Domain.Interfaces.Repositories
         IQueryable<T> Filter(IQueryable<T> entity);
         Task Add(T entity);
         Task Remove(long id);
+        Task Remove(T entity);
         void Update(T entity);
         Task<T> GetById(long id);
     }

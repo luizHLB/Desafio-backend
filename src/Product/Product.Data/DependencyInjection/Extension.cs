@@ -16,6 +16,7 @@ namespace Product.Data.DependencyInjection
             service.AddScoped<INotificationRepository, NotificationRepository>();
             service.AddScoped<IPlanRepository, PlanRepository>();
             service.AddScoped<IRentalRepository, RentalRepository>();
+            service.AddScoped<IUserRepository, UserRepository>();
 
             service.AddDbContext<ProductContext>(options => options.UseNpgsql(config.GetConnectionString("ProductDB")));
 

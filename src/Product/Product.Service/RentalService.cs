@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Product.Domain.DTO;
 using Product.Domain.DTO.Rental;
 using Product.Domain.Entities;
 using Product.Domain.Entities.Enums;
@@ -12,11 +13,13 @@ namespace Product.Service
 {
     public class RentalService : BaseService<Rental, RentalDTO>, IRentalService
     {
+        private readonly IRentalRepository _repository;
         private readonly IDriverRepository _driverRepository;
         private readonly IPlanRepository _planRepository;
 
         public RentalService(ILogger<RentalService> logger, IRentalRepository repository, IDriverRepository driverRepository, IPlanRepository planRepository) : base(logger, repository)
         {
+            this._repository = repository;
             _driverRepository = driverRepository;
             _planRepository = planRepository;
         }
@@ -39,12 +42,15 @@ namespace Product.Service
 
         public async Task<RentalDTO> Complete(UpdateRentalDTO dto)
         {
-            var entity = await _repository.GetById(dto.Id);
+            var entity = await base._repository.GetById(dto.Id);
             if (entity is null)
                 throw new RecordNotFoundException();
 
             if (entity.ReturnDate.HasValue)
                 throw new EntityConstraintException("Rental already completed");
+
+            if (dto.ReturnalDate.Date.Equals(new DateTime().Date) || dto.ReturnalDate.Date < entity.WithdrawDate.Date)
+                throw new EntityConstraintException("Returnal date is invalid");
 
             entity.ReturnDate = dto.ReturnalDate;
             await CalculateTotals(entity);
@@ -57,15 +63,16 @@ namespace Product.Service
         private async Task CalculateTotals(Rental entity)
         {
             var plan = await _planRepository.GetById(entity.PlanId);
+
             entity.TotalRental = CalculateTotalRental(entity, plan);
             entity.TotalFines = CalculateFines(entity, plan);
-            if (!entity.TotalFines.HasValue)
-                entity.TotalExtras = CalculateExtras(entity, plan);
+            entity.TotalExtras = CalculateExtras(entity, plan);
         }
 
         private double CalculateExtras(Rental entity, Plan plan)
         {
-            var days = (entity.ReturnDate.Value - entity.WithdrawDate).Days;
+            var days = (entity.ReturnDate.GetValueOrDefault().Date - entity.EstimatedReturnDate.Date).Days;
+
             if (!plan.Extra.HasValue || days <= 0)
                 return 0D;
 
@@ -74,17 +81,17 @@ namespace Product.Service
 
         private double CalculateFines(Rental entity, Plan plan)
         {
-            var days = (entity.ReturnDate.Value - entity.WithdrawDate).Days;
-            if (!plan.Fine.HasValue || days >= plan.Period)
+            var days = (entity.EstimatedReturnDate.Date - entity.ReturnDate.GetValueOrDefault().Date).Days;
+
+            if (!plan.Fine.HasValue || days <= 0)
                 return 0D;
 
-            return (plan.Period - days) * (plan.Fine.Value / 100) * plan.Price;
-
+            return days * (plan.Fine.Value / 100) * plan.Price;
         }
 
         private double CalculateTotalRental(Rental entity, Plan plan)
         {
-            var days = Math.Ceiling((entity.ReturnDate.Value - entity.WithdrawDate).TotalDays);
+            var days = (entity.ReturnDate.GetValueOrDefault().Date - entity.WithdrawDate.Date).Days;
             return days * plan.Price;
         }
 
@@ -103,7 +110,7 @@ namespace Product.Service
             if (entity.WithdrawDate.Equals(new DateTime()) || entity.WithdrawDate >= DateTime.Now)
                 messages.Add("Withdraw date is invalid");
 
-            if (entity.EstimatedReturnDate.Equals(new DateTime()) || entity.EstimatedReturnDate <= DateTime.Now || entity.EstimatedReturnDate <= entity.WithdrawDate)
+            if (entity.EstimatedReturnDate.Date.Equals(new DateTime().Date) || entity.EstimatedReturnDate.Date <= DateTime.Now.Date || entity.EstimatedReturnDate.Date <= entity.WithdrawDate.Date)
                 messages.Add("Estimated Return date is invalid");
 
             if (entity.DriverId > 0)
@@ -115,6 +122,21 @@ namespace Product.Service
 
             if (messages.Any())
                 throw new EntityConstraintException(messages);
+
+            if (await _repository.CheckVehicleDisponibilty(entity.WithdrawDate, entity.EstimatedReturnDate, entity.VehicleId))
+                throw new EntityConstraintException("Vehicle not available on this period");
+        }
+
+        public async Task<RentalDTO> GetDtoById(long id)
+        {
+            var response = await _repository.GetById(id);
+            return new RentalDTO(response);
+        }
+
+        public async Task<PagedListDTO<RentalDTO>> PagedListAsync(long? driverId, int page, int pageSize)
+        {
+            var validate = driverId.GetValueOrDefault() > 0;
+            return await _repository.PagedListAsync(w => validate ? w.DriverId == driverId.Value : true, page, pageSize);
         }
     }
 }

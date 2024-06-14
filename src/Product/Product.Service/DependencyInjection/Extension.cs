@@ -21,7 +21,7 @@ namespace Product.Service.DependencyInjection
                 return response;
             });
 
-
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IDriverService, DriverService>();

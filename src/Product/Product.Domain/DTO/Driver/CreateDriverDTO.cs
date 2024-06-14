@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Product.Domain.Entities.Enums;
-using System.Text.Json.Serialization;
+﻿using Product.Domain.Entities.Enums;
 
 namespace Product.Domain.DTO.Driver
 {
-    public class CreateDriverDTO
+    public class CreateDriverDTO : UpdateDriverDTO
     {
         public string Identifier { get; set; }
         public string Name { get; set; }
@@ -12,7 +10,5 @@ namespace Product.Domain.DTO.Driver
         public DateTime BirthDate { get; set; }
         public string CNH { get; set; }
         public CNHCategory[] CNHCategory { get; set; }
-        [JsonIgnore]
-        public IFormFile CNHImage { get; set; }
     }
 }

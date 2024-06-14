@@ -7,7 +7,7 @@ using Product.Domain.Interfaces.Services;
 namespace Product.API.Controllers
 {
     [Produces("application/json")]
-    [Route("api/v1/Plan")]
+    [Route("api/v1/Rental")]
     [AllowAnonymous]
     public class RentalController : Controller
     {
@@ -15,6 +15,36 @@ namespace Product.API.Controllers
         public RentalController(IRentalService service)
         {
             _service = service;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery]long? driverId = null, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            try
+            {
+                return Ok(await _service.PagedListAsync(driverId, page, pageSize));
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message, statusCode: 500);
+            }
+        }
+
+        [HttpGet("{id}:long")]
+        public async Task<IActionResult> Get([FromRoute] long id)
+        {
+            try
+            {
+                return Ok(await _service.GetDtoById(id));
+            }
+            catch (RecordNotFoundException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (Exception e)
+            {
+                return Problem(e.Message, statusCode: 500);
+            }
         }
 
         [HttpPost]
@@ -34,7 +64,7 @@ namespace Product.API.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("complete")]
         public async Task<IActionResult> Complete([FromBody] UpdateRentalDTO dto)
         {
             try

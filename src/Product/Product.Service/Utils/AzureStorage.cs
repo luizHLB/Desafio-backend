@@ -1,6 +1,7 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Http;
+using Product.Domain.Helpers;
 using Product.Domain.Interfaces.Utils;
 
 namespace Product.Service.Utils
@@ -23,7 +24,7 @@ namespace Product.Service.Utils
         {
             using(var memoryStream = new MemoryStream())
             {
-                var fileName = $"{Guid.NewGuid()}";
+                var fileName = $"{Guid.NewGuid()}".OnlyAlphaNumeric();
                 var extension = file.FileName.Split('.').Last();
                 await file.CopyToAsync(memoryStream);
                 var client = _storageAccountAzure.GetBlobClient(fileName);
@@ -31,7 +32,7 @@ namespace Product.Service.Utils
                 memoryStream.Position = 0;
                 await client.UploadAsync(memoryStream, options);
 
-                return $"{fileName}.{extension}";
+                return fileName;
 
             }
         }
