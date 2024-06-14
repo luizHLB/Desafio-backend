@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Product.API.Controllers.Base;
 using Product.API.Filter;
 using Product.Domain.DTO.Driver;
-using Product.Domain.DTO.Vehicle;
-using Product.Domain.Entities;
 using Product.Domain.Exceptions;
 using Product.Domain.Interfaces.Services;
 
@@ -13,7 +12,7 @@ namespace Product.API.Controllers
     [Produces("application/json")]
     [Route("api/v1/Driver")]
     [TokenHandler]
-    public class DriverController : BaseController<Driver, DriverDTO>
+    public class DriverController : BaseController
     {
         private readonly IDriverService _service;
         public DriverController(IDriverService service) : base (service)
@@ -22,7 +21,8 @@ namespace Product.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] string name = "", [FromQuery] string cnpj = "", [FromQuery] string cnh = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> Get([FromQuery] string? name = "", [FromQuery] string? cnpj = "", [FromQuery] string? cnh = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             try
             {

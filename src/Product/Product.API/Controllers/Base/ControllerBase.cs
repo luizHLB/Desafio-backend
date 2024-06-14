@@ -3,12 +3,12 @@ using Product.Domain.Interfaces.Services;
 
 namespace Product.API.Controllers.Base
 {
-    public class BaseController<T, TT> : Controller where T : class where TT : class
+    [ApiController]
+    public class BaseController : Controller
     {
-        private readonly IBaseService<T, TT> _service;
-        public IBaseService<T, TT> Service { get; set; }
+        public IBaseUserHandler Service { get; set; }
 
-        public BaseController(IBaseService<T, TT> service)
+        public BaseController(IBaseUserHandler service)
         {
             Service = service;
         }
