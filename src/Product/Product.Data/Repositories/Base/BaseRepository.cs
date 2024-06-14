@@ -12,7 +12,7 @@ using System.Linq.Expressions;
 
 namespace Product.Data.Repositories.Base
 {
-    public abstract class BaseRepository<T, TT> : IBaseRespository<T, TT> where T : BaseEntity where TT : class
+    public abstract class BaseRepository<T, TT> : IBaseRepository<T, TT> where T : BaseEntity where TT : class
     {
         protected readonly ProductContext _context;
 

@@ -25,6 +25,7 @@ namespace Product.Service.DependencyInjection
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IDriverService, DriverService>();
+            services.AddScoped<IPlanService, PlanService>();
             services.AddScoped<IAzureStorage, AzureStorage>();
 
             services.AddSingleton<IRabbitMQManager, RabbitMQManager>();

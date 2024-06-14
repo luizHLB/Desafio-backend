@@ -10,12 +10,12 @@ namespace Product.Service.Base
     public class BaseService<T, TT> : IBaseService<T, TT> where T : class where TT : class
     {
         protected readonly ILogger<BaseService<T, TT>> _logger;
-        protected readonly IBaseRespository<T, TT> _repository;
+        protected readonly IBaseRepository<T, TT> _repository;
 
-        public BaseService(ILogger<BaseService<T, TT>> logger, IBaseRespository<T, TT> respository)
+        public BaseService(ILogger<BaseService<T, TT>> logger, IBaseRepository<T, TT> repository)
         {
             _logger = logger;
-            _repository = respository;
+            _repository = repository;
         }
 
         public virtual async Task Add(T entity)
