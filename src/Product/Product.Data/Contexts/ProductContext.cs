@@ -14,6 +14,7 @@ namespace Product.Data.Contexts
         public DbSet<Rental> Rentals { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<User> Users { get; set; }
+       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

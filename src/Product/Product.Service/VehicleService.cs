@@ -1,5 +1,4 @@
-﻿using Azure;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Product.Domain.DTO;
 using Product.Domain.DTO.Vehicle;
 using Product.Domain.Entities;

@@ -1,15 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
 using Product.Domain.DTO;
-using Product.Domain.DTO.Driver;
 using Product.Domain.DTO.Rental;
 using Product.Domain.Entities;
-using Product.Domain.Entities.Enums;
 using Product.Domain.Exceptions;
 using Product.Domain.Helpers;
 using Product.Domain.Interfaces.Repositories;
 using Product.Service;
-using System.ComponentModel.DataAnnotations;
 
 namespace Product.Test
 {
