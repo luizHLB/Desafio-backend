@@ -19,7 +19,7 @@ namespace Product.Service
 
         public RentalService(ILogger<RentalService> logger, IRentalRepository repository, IDriverRepository driverRepository, IPlanRepository planRepository) : base(logger, repository)
         {
-            this._repository = repository;
+            _repository = repository;
             _driverRepository = driverRepository;
             _planRepository = planRepository;
         }

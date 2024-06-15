@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Azure;
+using Microsoft.Extensions.Logging;
 using Product.Domain.DTO;
 using Product.Domain.DTO.Vehicle;
 using Product.Domain.Entities;
@@ -56,6 +57,9 @@ namespace Product.Service
         public async Task<VehicleDTO> Update(PatchVehicleDTO dto)
         {
             var entity = await GetById(dto.Id);
+            if (entity is null)
+                throw new RecordNotFoundException();
+
             entity.LicensePlate = dto.LicensePlate;
             await Update(entity);
 

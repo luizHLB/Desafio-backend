@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Product.Domain.DTO.Authentication;
 using Product.Domain.Entities;
 using Product.Domain.Exceptions;
@@ -21,7 +22,9 @@ namespace Product.Service
         public AuthenticationService(IConfiguration config, IUserRepository repository)
         {
             var jwtSection = config.GetSection(nameof(JwtSettings));
-            _jwt = jwtSection.Get<JwtSettings>();
+            _jwt = string.IsNullOrEmpty(jwtSection.Value) 
+                ? jwtSection.Get<JwtSettings>() 
+                : JsonConvert.DeserializeObject<JwtSettings>(jwtSection.Value);
             _repository = repository;
         }
 

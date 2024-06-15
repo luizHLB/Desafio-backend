@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Product.Domain.DTO;
 using Product.Domain.DTO.Driver;
 using Product.Domain.Entities;
@@ -24,9 +25,11 @@ namespace Product.Service
         {
             _azureStorage = azureStorage;
 
-            var azureStorageSection = config.GetSection(nameof(AzureStorageSettings));
-            var azureStorageSettings = azureStorageSection.Get<AzureStorageSettings>();
-            _baseURI = $"{azureStorageSettings.BaseURI}/{azureStorageSettings.ContainerName}/";
+            var section = config.GetSection(nameof(AzureStorageSettings));
+            var azuresettings = string.IsNullOrEmpty(section.Value)
+                ? section.Get<AzureStorageSettings>()
+                : JsonConvert.DeserializeObject<AzureStorageSettings>(section.Value);
+            _baseURI = $"{azuresettings.BaseURI}/{azuresettings.ContainerName}/";
         }
 
         public async Task<DriverDTO> Create(CreateDriverDTO dto)
