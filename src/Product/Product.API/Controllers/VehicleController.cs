@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Product.API.Controllers.Base;
 using Product.API.Filter;
 using Product.Domain.DTO.Vehicle;
-using Product.Domain.Exceptions;
 using Product.Domain.Interfaces.Services;
 
 namespace Product.API.Controllers
