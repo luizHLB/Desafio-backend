@@ -9,9 +9,7 @@ namespace Product.API.Filter
 {
     public class TokenHandlerAttribute : TypeFilterAttribute
     {
-        public TokenHandlerAttribute() : base(typeof(AuthrorizeFilter))
-        {
-        }
+        public TokenHandlerAttribute() : base(typeof(AuthrorizeFilter)) { }
     }
 
     public class AuthrorizeFilter : IActionFilter
@@ -22,13 +20,21 @@ namespace Product.API.Filter
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            var contextJson = context.HttpContext.User.Claims.FirstOrDefault(f => f.Type.Equals("context")).Value;
-            var jwtContext = JsonConvert.DeserializeObject<JwtContextVO>(contextJson);
+            var claim = context.HttpContext.User.Claims.FirstOrDefault(f => f.Type.Equals("context"));
+            if (claim is null || string.IsNullOrEmpty(claim.Value) || context.Controller is not BaseController)
+                return;
+
 
             var controller = (BaseController)context.Controller;
-            var service = controller.GetType().GetProperty("Service").GetValue(controller);
+            var service = controller.GetType().GetProperty("Service")?.GetValue(controller);
+            
+            if (service is null)
+                return;
+
+            var jwtContext = JsonConvert.DeserializeObject<JwtContextVO>(claim.Value);
+            
             ((IBaseServiceUserHandler)service).SetJwtContext(jwtContext);
-            ((IBaseServiceUserHandler)service).Repository.SetJwtContext(jwtContext);
+            ((IBaseServiceUserHandler)service).Repository?.SetJwtContext(jwtContext);
         }
     }
 }

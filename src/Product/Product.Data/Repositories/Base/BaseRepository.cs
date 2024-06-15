@@ -38,12 +38,9 @@ namespace Product.Data.Repositories.Base
             {
                 if (e.InnerException is PostgresException && !string.IsNullOrEmpty(((PostgresException)e.InnerException).ConstraintName))
                     throw new EntityConstraintException(((PostgresException)e.InnerException).ConstraintName);
-                throw e;
-            }
-            catch (Exception)
-            {
                 throw;
             }
+            catch (Exception) { throw; }
         }
 
         public async Task<PagedListDTO<TT>> PagedListAsync(Expression<Func<T, bool>> expression, int pageNumber, int pageSize)
@@ -100,10 +97,7 @@ namespace Product.Data.Repositories.Base
                 if (e.InnerException is PostgresException && !string.IsNullOrEmpty(((PostgresException)e.InnerException).ConstraintName))
                     throw new EntityConstraintException(((PostgresException)e.InnerException).ConstraintName);
             }
-            catch (Exception)
-            {
-                throw;
-            }
+            catch (Exception) { throw; }
         }
 
         public virtual async Task<T> GetById(long id) => await _context.Set<T>().FirstOrDefaultAsync(f => f.Id.Equals(id));

@@ -22,14 +22,7 @@ namespace Product.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            try
-            {
-                return Ok(await _service.GetPlans());
-            }
-            catch (Exception e)
-            {
-                return Problem(e.Message, statusCode: 500);
-            }
+            return Ok(await _service.GetPlans());
         }
     }
 }

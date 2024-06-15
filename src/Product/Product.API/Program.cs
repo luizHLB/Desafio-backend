@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Product.API.Middlewares;
 using Product.API.Workers;
 using Product.Data.Contexts;
 using Product.Data.DependencyInjection;
@@ -86,6 +87,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseAuthentication();
 app.MapControllers();
+app.UseCaptureRequestBodyMiddleware();
+app.UseGlobalExceptionHandlerMiddleware(app.Logger, app.Environment);
 
 using (var scope = app.Services.CreateScope())
 {

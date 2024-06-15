@@ -16,7 +16,7 @@ namespace Product.API.Controllers
     public class DriverController : BaseController
     {
         private readonly IDriverService _service;
-        public DriverController(IDriverService service) : base (service)
+        public DriverController(IDriverService service) : base(service)
         {
             _service = service;
         }
@@ -24,87 +24,32 @@ namespace Product.API.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] string? name = "", [FromQuery] string? cnpj = "", [FromQuery] string? cnh = "", [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            try
-            {
-                return Ok(await _service.PagedListAsync(name, cnpj, cnh, page, pageSize));
-            }
-            catch (Exception e)
-            {
-                return Problem(e.Message, statusCode: 500);
-            }
+            return Ok(await _service.PagedListAsync(name, cnpj, cnh, page, pageSize));
         }
 
         [HttpGet("{id}:long")]
         public async Task<IActionResult> Get([FromRoute] long id)
         {
-            try
-            {
-                return Ok(await _service.GetDtoById(id));
-            }
-            catch (RecordNotFoundException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (Exception e)
-            {
-                return Problem(e.Message, statusCode: 500);
-            }
+            return Ok(await _service.GetDtoById(id));
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] CreateDriverDTO dto)
         {
-            try
-            {
-                return Ok(await _service.Create(dto));
-            }
-            catch (EntityConstraintException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (Exception e)
-            {
-                return Problem(e.Message, statusCode: 500);
-            }
+            return Ok(await _service.Create(dto));
         }
 
         [HttpPatch("{id:long}")]
         public async Task<IActionResult> Patch([FromRoute] long id, [FromForm] UpdateDriverDTO dto)
         {
-            try
-            {
-                return Ok(await _service.Update(id, dto));
-            }
-            catch (EntityConstraintException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (RecordNotFoundException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (Exception e)
-            {
-                return Problem(e.Message, statusCode: 500);
-            }
+            return Ok(await _service.Update(id, dto));
         }
 
         [HttpDelete("{id:long}")]
         public async Task<IActionResult> Delete([FromRoute] long id)
         {
-            try
-            {
-                await _service.Remove(id);
-                return Ok();
-            }
-            catch (RecordNotFoundException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch (Exception e)
-            {
-                return Problem(e.Message, statusCode: 500);
-            }
+            await _service.Remove(id);
+            return Ok();
         }
     }
 }

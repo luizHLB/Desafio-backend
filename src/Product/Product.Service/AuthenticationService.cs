@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using Product.Domain.DTO.Authentication;
 using Product.Domain.Entities;
+using Product.Domain.Exceptions;
 using Product.Domain.Interfaces.Repositories;
 using Product.Domain.Interfaces.Services;
 using Product.Domain.Secutiry;
@@ -28,8 +29,14 @@ namespace Product.Service
         {
             //ywUB54Vih5gwAfVhHbEwVt73ZSjVnDvLbxo2EGaehjQv/n3R/TZOTVHhK8468Z8dnl3Tmb3I0uiT+ibj/RphIg==
             //ywUB54Vih5gwAfVhHbEwVqhAI85hRzeYyeo1yLyWIuk=
+
             var loginData = CryptoHelper.Decrypt(dto.Data, _jwt.SecKey, _jwt.IV).Split(':');
+            if (loginData.Length < 2)
+                throw new LoginException("Invalid login information");
+
             var user = await _repository.GetUser(loginData[0], loginData[1]);
+            if (user is null)
+                throw new LoginException("Email e/or Password invalid");
 
             return GenerateToken(user);
         }

@@ -12,7 +12,7 @@ namespace Product.Service.Base
         public IBaseRepositoryUserHandler Repository { get; set; }
 
         private JwtContextVO jwtContext;
-        public JwtContextVO JwtContext { get { return jwtContext; }}
+        public JwtContextVO _JwtContext { get { return jwtContext; }}
 
 
         public BaseService(ILogger<BaseService<T, TT>> logger, IBaseRepository<T, TT> repository)

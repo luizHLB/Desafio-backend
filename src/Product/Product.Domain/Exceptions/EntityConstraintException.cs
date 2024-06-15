@@ -5,4 +5,11 @@
         public EntityConstraintException(string message) : base($"Cannot duplicate {message.Split('_').LastOrDefault()}") { }
         public EntityConstraintException(IList<string> messages) : base(string.Join(" | ", messages)) { }
     }
+
+    public class LoginException : Exception
+    {
+        public LoginException(string? message) : base(message)
+        {
+        }
+    }
 }

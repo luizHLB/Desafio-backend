@@ -19,15 +19,7 @@ namespace Product.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] AuthenticationDTO dto)
         {
-            try
-            {
-                return Ok(await _service.Authenticate(dto));
-            }
-            catch (Exception e)
-            {
-
-                throw;
-            }
+            return Ok(await _service.Authenticate(dto));
         }
     }
 
