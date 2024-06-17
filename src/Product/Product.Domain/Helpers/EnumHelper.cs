@@ -3,7 +3,9 @@
     public static class EnumHelper<T> where T : struct, IConvertible
     {
         public static int GetValue(IEnumerable<T> inputAttachments) =>
-            inputAttachments.Sum(item => Convert.ToInt32(item));
+            inputAttachments is null || !inputAttachments.Any()
+            ? 0
+            : inputAttachments.Sum(item => Convert.ToInt32(item));
 
         public static object GetEnums(int input, bool getEnumName)
         {

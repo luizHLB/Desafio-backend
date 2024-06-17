@@ -13,6 +13,7 @@ using Product.Domain.Interfaces.Services;
 using Product.Domain.Interfaces.Utils;
 using Product.Domain.Settings;
 using Product.Service.Base;
+using System.Net;
 
 namespace Product.Service
 {
@@ -80,7 +81,7 @@ namespace Product.Service
             return await _repository.PagedListAsync(w => w.Name.ToLower().Contains(name) && w.CNPJ.Contains(cnpj) && w.CNH.Contains(cnh), page, pageSize);
         }
 
-        public async Task<DriverDTO> Update(long id, UpdateDriverDTO  dto)
+        public async Task<DriverDTO> Update(long id, UpdateDriverDTO dto)
         {
             var entity = await GetById(id);
             if (entity is null)
@@ -113,7 +114,7 @@ namespace Product.Service
                 messages.Add("CNPJ is invalid");
 
             if (string.IsNullOrEmpty(entity.CNH))
-                messages.Add("CNPJ is required");
+                messages.Add("CNH is required");
 
             entity.CNH = entity.CNH.OnlyDigits();
             if (entity.CNH.Length == 0)
@@ -133,15 +134,19 @@ namespace Product.Service
         private void ValidateFile(IFormFile file)
         {
             if (file is null)
-                throw new EntityConstraintException("CNH Image is required");
+                throw new EntityConstraintException(new string[] { "CNH Image is required" });
 
+            var messages = new List<string>();
             var extensions = new string[] { ImageFormat.PNG.ToString(), ImageFormat.BMP.ToString() };
 
             if (!extensions.Contains(file.FileName.ToUpper().Split('.').LastOrDefault()))
-                throw new EntityConstraintException($"CNH Image format not allowed. Must be ({string.Join(",", extensions)})");
+                messages.Add($"CNH Image format not allowed. Must be ({string.Join(",", extensions)})");
 
             if (file.Length <= 0)
-                throw new EntityConstraintException($"CNH Image corrupted");
+                messages.Add($"CNH Image corrupted");
+
+            if (messages.Any())
+                throw new EntityConstraintException(messages);
         }
 
         public override async Task Remove(long id)

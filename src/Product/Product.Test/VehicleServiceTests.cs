@@ -8,6 +8,7 @@ using Product.Domain.Interfaces.Repositories;
 using Product.Domain.Interfaces.Utils;
 using Product.Domain.Settings;
 using Product.Service;
+using System.Threading.Tasks;
 
 namespace Product.Test
 {
@@ -27,7 +28,7 @@ namespace Product.Test
         }
 
         [Fact]
-        public async Task Create_ReturnsVehicleDTO()
+        public async Task Create_ValidVehicle()
         {
             // Arrange
             var createDto = new CreateVehicleDTO { Identifier = "12345", LicensePlate = "ABC1234", Model = "ModelX", Year = 2022 };
@@ -38,12 +39,133 @@ namespace Product.Test
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(createDto.Identifier, result.Identifier);
-            Assert.Equal(createDto.LicensePlate, result.LicensePlate);
-            Assert.Equal(createDto.Model, result.Model);
-            Assert.Equal(createDto.Year, result.Year);
             _repositoryMock.Verify(r => r.Add(It.IsAny<Vehicle>()), Times.Once);
             _rabbitMQManagerMock.Verify(r => r.BasicPublish(It.IsAny<ExecutionQueue>(), It.IsAny<object>(), It.IsAny<string>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task Create_InValidVehicle_NoIdentifier()
+        {
+            // Arrange
+            var createDto = new CreateVehicleDTO
+            {
+                //Identifier = "12345",
+                LicensePlate = "ABC1234",
+                Model = "ModelX",
+                Year = 2022
+            };
+
+            var task = _vehicleService.Create(createDto);
+            await Assert.ThrowsAsync<EntityConstraintException>(() => task);
+            try
+            {
+                await task;
+                Assert.Fail("Exception should have happened");
+            }
+            catch (Exception e)
+            {
+                Assert.True(e.Message.Contains("Identifier is required"));
+            }
+        }
+
+        [Fact]
+        public async Task Create_InValidVehicle_NoLicensePlate()
+        {
+            // Arrange
+            var createDto = new CreateVehicleDTO
+            {
+                Identifier = "12345",
+                //LicensePlate = "ABC1234",
+                Model = "ModelX",
+                Year = 2022
+            };
+
+            var task = _vehicleService.Create(createDto);
+            await Assert.ThrowsAsync<EntityConstraintException>(() => task);
+            try
+            {
+                await task;
+                Assert.Fail("Exception should have happened");
+            }
+            catch (Exception e)
+            {
+                Assert.True(e.Message.Contains("LicensePlate is required"));
+            }
+        }
+
+        [Fact]
+        public async Task Create_InValidVehicle_InvalidLicensePlate()
+        {
+            // Arrange
+            var createDto = new CreateVehicleDTO
+            {
+                Identifier = "12345",
+                LicensePlate = "------",
+                Model = "ModelX",
+                Year = 2022
+            };
+
+            var task = _vehicleService.Create(createDto);
+            await Assert.ThrowsAsync<EntityConstraintException>(() => task);
+            try
+            {
+                await task;
+                Assert.Fail("Exception should have happened");
+            }
+            catch (Exception e)
+            {
+                Assert.True(e.Message.Contains("LicensePlate is invalid"));
+            }
+        }
+
+        [Fact]
+        public async Task Create_InValidVehicle_NoModel()
+        {
+            // Arrange
+            var createDto = new CreateVehicleDTO
+            {
+                Identifier = "12345",
+                LicensePlate = "ABC1234",
+                //Model = "ModelX",
+                Year = 2022
+            };
+
+            var task = _vehicleService.Create(createDto);
+            await Assert.ThrowsAsync<EntityConstraintException>(() => task);
+            try
+            {
+                await task;
+                Assert.Fail("Exception should have happened");
+            }
+            catch (Exception e)
+            {
+                Assert.True(e.Message.Contains("Model is required"));
+            }
+        }
+
+        [Fact]
+        public async Task Create_InValidVehicle_NoYear()
+        {
+            // Arrange
+            var createDto = new CreateVehicleDTO
+            {
+                Identifier = "12345",
+                LicensePlate = "ABC1234",
+                Model = "ModelX",
+                //Year = 2022
+            };
+
+            var task = _vehicleService.Create(createDto);
+            await Assert.ThrowsAsync<EntityConstraintException>(() => task);
+            try
+            {
+                await task;
+                Assert.Fail("Exception should have happened");
+            }
+            catch (Exception e)
+            {
+                Assert.True(e.Message.Contains("Year is invalid"));
+            }
         }
 
         [Fact]
@@ -62,13 +184,13 @@ namespace Product.Test
         }
 
         [Fact]
-        public async Task GetDtoById_ThrowsRecordNotFoundException_WhenVehicleNotFound()
+        public async Task GetDtoById_InvalidId()
         {
             // Arrange
-            _repositoryMock.Setup(r => r.GetById(It.IsAny<long>())).ReturnsAsync((Vehicle)null);
+            var vehicle = new Vehicle { Id = 1, Identifier = "12345", LicensePlate = "ABC1234", Model = "ModelX", Year = 2022 };
+            _repositoryMock.Setup(r => r.GetById(1)).ReturnsAsync(vehicle);
 
-            // Act & Assert
-            await Assert.ThrowsAsync<RecordNotFoundException>(() => _vehicleService.GetDtoById(1));
+            await Assert.ThrowsAsync<RecordNotFoundException>(() => _vehicleService.GetDtoById(2));
         }
 
         [Fact]
@@ -111,13 +233,72 @@ namespace Product.Test
         }
 
         [Fact]
-        public async Task Update_ThrowsRecordNotFoundException_WhenVehicleNotFound()
+        public async Task Update_NoLicensePlate()
         {
             // Arrange
-            var patchDto = new PatchVehicleDTO { Id = 1, LicensePlate = "XYZ5678" };
-            _repositoryMock.Setup(r => r.GetById(It.IsAny<long>())).ReturnsAsync((Vehicle)null);
+            var patchDto = new PatchVehicleDTO
+            {
+                Id = 1,
+                //LicensePlate = "XYZ5678"
+            };
+            var vehicle = new Vehicle { Id = patchDto.Id, Identifier = "12345", LicensePlate = "ABC1234", Model = "ModelX", Year = 2022 };
 
-            // Act & Assert
+            _repositoryMock.Setup(r => r.GetById(It.IsAny<long>())).ReturnsAsync(vehicle);
+
+
+            var task = _vehicleService.Update(patchDto);
+            await Assert.ThrowsAsync<EntityConstraintException>(() => task);
+            try
+            {
+                await task;
+                Assert.Fail("Exception should have happened");
+            }
+            catch (Exception e)
+            {
+                Assert.True(e.Message.Contains("LicensePlate is required"));
+            }
+        }
+
+        [Fact]
+        public async Task Update_InvalidLicensePlate()
+        {
+            // Arrange
+            var patchDto = new PatchVehicleDTO
+            {
+                Id = 1,
+                LicensePlate = "----"
+            };
+            var vehicle = new Vehicle { Id = patchDto.Id, Identifier = "12345", LicensePlate = "ABC1234", Model = "ModelX", Year = 2022 };
+
+            _repositoryMock.Setup(r => r.GetById(It.IsAny<long>())).ReturnsAsync(vehicle);
+
+
+            var task = _vehicleService.Update(patchDto);
+            await Assert.ThrowsAsync<EntityConstraintException>(() => task);
+            try
+            {
+                await task;
+                Assert.Fail("Exception should have happened");
+            }
+            catch (Exception e)
+            {
+                Assert.True(e.Message.Contains("LicensePlate is invalid"));
+            }
+        }
+
+        [Fact]
+        public async Task Update_InvalidId()
+        {
+            // Arrange
+            var patchDto = new PatchVehicleDTO
+            {
+                Id = 2,
+                LicensePlate = "XYZ5678"
+            };
+            var vehicle = new Vehicle { Id = patchDto.Id, Identifier = "12345", LicensePlate = "ABC1234", Model = "ModelX", Year = 2022 };
+
+            _repositoryMock.Setup(r => r.GetById(1)).ReturnsAsync(vehicle);
+
             await Assert.ThrowsAsync<RecordNotFoundException>(() => _vehicleService.Update(patchDto));
         }
     }

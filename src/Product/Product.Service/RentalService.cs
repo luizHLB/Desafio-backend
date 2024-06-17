@@ -91,7 +91,11 @@ namespace Product.Service
 
         private double CalculateTotalRental(Rental entity, Plan plan)
         {
-            var days = (entity.ReturnDate.GetValueOrDefault().Date - entity.WithdrawDate.Date).Days;
+            var baseDate = entity.ReturnDate.GetValueOrDefault().Date > entity.EstimatedReturnDate.Date
+                ? entity.EstimatedReturnDate.Date
+                : entity.ReturnDate.GetValueOrDefault().Date;
+
+            var days = (baseDate - entity.WithdrawDate.Date).Days;
             return days * plan.Price;
         }
 
@@ -105,12 +109,12 @@ namespace Product.Service
                 messages.Add("Driver is invalid");
 
             if (entity.VehicleId <= 0)
-                messages.Add("VehicleId is invalid");
+                messages.Add("Vehicle is invalid");
 
             if (entity.WithdrawDate.Equals(new DateTime()) || entity.WithdrawDate >= DateTime.Now)
                 messages.Add("Withdraw date is invalid");
 
-            if (entity.EstimatedReturnDate.Date.Equals(new DateTime().Date) || entity.EstimatedReturnDate.Date <= DateTime.Now.Date || entity.EstimatedReturnDate.Date <= entity.WithdrawDate.Date)
+            if (entity.EstimatedReturnDate.Date.Equals(new DateTime().Date) || entity.EstimatedReturnDate.Date <= entity.WithdrawDate.Date)
                 messages.Add("Estimated Return date is invalid");
 
             if (entity.DriverId > 0)

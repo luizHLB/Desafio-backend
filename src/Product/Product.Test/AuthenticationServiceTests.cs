@@ -46,7 +46,7 @@ namespace Product.Test
         }
 
         [Fact]
-        public async Task Authenticate_ValidCredentials_ReturnsToken()
+        public async Task Authenticate_ValidCredentials()
         {
             // Arrange
             var dto = new AuthenticationDTO
@@ -72,7 +72,7 @@ namespace Product.Test
         }
 
         [Fact]
-        public async Task Authenticate_InvalidCredentials_ThrowsLoginException()
+        public async Task Authenticate_InvalidCredentials()
         {
             // Arrange
             var dto = new AuthenticationDTO
@@ -80,8 +80,7 @@ namespace Product.Test
                 Data = "ywUB54Vih5gwAfVhHbEwVqhAI85hRzeYyeo1yLyWIuk="
             };
 
-            _repositoryMock.Setup(r => r.GetUser(It.IsAny<string>(), It.IsAny<string>()))
-                           .ReturnsAsync((User)null);
+            _repositoryMock.Setup(r => r.GetUser(It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync((User)null);
 
             // Act & Assert
             await Assert.ThrowsAsync<LoginException>(() => _authService.Authenticate(dto));
