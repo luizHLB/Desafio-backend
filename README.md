@@ -24,3 +24,5 @@ O mesmo é valido por 24 horas.
  E = 16
 
 2 - Os parâmetros no arquivo de configuração estão adequados para a aplicação rodar no docker, se houver a necessidade de rodar por dentro de alguma interface de desenvolvimento, existem configurações comentadas no arquivo, elas devem ser alterarnadas coma s configurações do docker vigentes.
+
+3 - Ao criar a estrutura no docker, o RabbitMQ tem um delay para estar disponivel, o listener na API tem um tempo de espera semelhante para estar ativo.
