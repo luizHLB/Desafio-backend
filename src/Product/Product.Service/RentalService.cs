@@ -111,7 +111,7 @@ namespace Product.Service
             if (entity.VehicleId <= 0)
                 messages.Add("Vehicle is invalid");
 
-            if (entity.WithdrawDate.Equals(new DateTime()) || entity.WithdrawDate >= DateTime.Now)
+            if (entity.WithdrawDate.Equals(new DateTime()))
                 messages.Add("Withdraw date is invalid");
 
             if (entity.EstimatedReturnDate.Date.Equals(new DateTime().Date) || entity.EstimatedReturnDate.Date <= entity.WithdrawDate.Date)
@@ -120,6 +120,8 @@ namespace Product.Service
             if (entity.DriverId > 0)
             {
                 var driver = await _driverRepository.GetById(entity.DriverId);
+                if (driver is null)
+                    throw new RecordNotFoundException();
                 if (!EnumHelper<CNHCategory>.GetEnums(driver.CNHCategory).Contains(CNHCategory.A))
                     messages.Add($"Driver CNH Cagetory must be {CNHCategory.A}");
             }
@@ -127,7 +129,7 @@ namespace Product.Service
             if (messages.Any())
                 throw new EntityConstraintException(messages);
 
-            if (await _repository.CheckVehicleDisponibilty(entity.WithdrawDate, entity.EstimatedReturnDate, entity.VehicleId))
+            if (!entity.ReturnDate.HasValue && await _repository.CheckVehicleDisponibilty(entity.WithdrawDate, entity.EstimatedReturnDate, entity.VehicleId))
                 throw new EntityConstraintException("Vehicle not available on this period");
         }
 

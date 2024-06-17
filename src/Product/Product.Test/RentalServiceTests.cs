@@ -256,7 +256,7 @@ namespace Product.Test
                 DriverId = 1,
                 PlanId = 1,
                 VehicleId = 1,
-                WithdrawDate = DateTime.Now.AddDays(2),
+                WithdrawDate = new DateTime(),
                 EstimatedReturnDate = DateTime.Now.AddDays(7)
             };
             var rental = new Rental

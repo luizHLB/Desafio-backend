@@ -23,6 +23,7 @@ namespace Product.API.Workers
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            await Task.Delay(20000);
             using (var connection = _rabbitMQManager.ConnectionFactory.CreateConnection())
             using (var channel = connection.CreateModel())
             {

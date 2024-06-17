@@ -30,9 +30,6 @@ namespace Product.Service
 
         public async Task<string> Authenticate(AuthenticationDTO dto)
         {
-            //ywUB54Vih5gwAfVhHbEwVt73ZSjVnDvLbxo2EGaehjQv/n3R/TZOTVHhK8468Z8dnl3Tmb3I0uiT+ibj/RphIg==
-            //ywUB54Vih5gwAfVhHbEwVqhAI85hRzeYyeo1yLyWIuk=
-
             var loginData = CryptoHelper.Decrypt(dto.Data, _jwt.SecKey, _jwt.IV).Split(':');
             if (loginData.Length < 2)
                 throw new LoginException("Invalid login information");
