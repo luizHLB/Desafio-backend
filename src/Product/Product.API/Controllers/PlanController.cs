@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Product.API.Controllers.Base;
 using Product.API.Filter;
+using Product.Domain.DTO.Plan;
 using Product.Domain.Interfaces.Services;
 
 namespace Product.API.Controllers
@@ -20,6 +21,8 @@ namespace Product.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<PlanDTO>))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Get()
         {
             return Ok(await _service.GetPlans());

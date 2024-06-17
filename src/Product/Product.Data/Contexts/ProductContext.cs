@@ -6,7 +6,10 @@ namespace Product.Data.Contexts
 {
     public class ProductContext : DbContext
     {
-        public ProductContext(DbContextOptions<ProductContext> options) : base(options) { }
+        public ProductContext(DbContextOptions<ProductContext> options) : base(options) 
+        {
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+        }
 
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<Driver> Driver { get; set; }

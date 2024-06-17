@@ -16,7 +16,7 @@ namespace Product.Service.DependencyInjection
             var azureStorageSettings = azureStorageSection.Get<AzureStorageSettings>();
             services.AddScoped(serviceProvider =>
             {
-                var response = new BlobContainerClient($"{azureStorageSettings.ConnectionString}{azureStorageSettings.BaseURI}", azureStorageSettings.ContainerName);
+                var response = new BlobContainerClient(azureStorageSettings.ConnectionString, azureStorageSettings.ContainerName);
                 response.CreateIfNotExistsAsync(Azure.Storage.Blobs.Models.PublicAccessType.BlobContainer);
                 return response;
             });

@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Product.API.Controllers.Base;
 using Product.API.Filter;
+using Product.Domain.DTO;
+using Product.Domain.DTO.Driver;
 using Product.Domain.Interfaces.Services;
 
 namespace Product.API.Controllers
@@ -21,6 +23,8 @@ namespace Product.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PagedListDTO<DriverDTO>))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Get([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             return Ok(await _service.PagedListAsync(page, pageSize));
